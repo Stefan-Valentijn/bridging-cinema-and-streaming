@@ -1,6 +1,13 @@
 # Load libraries
 library(tidyverse)
 
+#Load dataset
+minimised_data <- read_csv("../data/minimised_data.csv")
+
+#Remove missign cases for now
+minimised_data <- minimised_data %>%
+  filter(!is.na(title))
+
 #Mean-center the IV and moderator before creating the interaction
 minimised_data <- minimised_data %>%
   mutate(

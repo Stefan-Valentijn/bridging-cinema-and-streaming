@@ -27,6 +27,12 @@ cinema_streaming_data <- cinema_streaming_data %>%
     release_window    = as.numeric(difftime(release_streaming, release_cinema, units = "days"))
   )
 
+cinema_streaming_data <- cinema_streaming_data %>%
+  mutate(
+    cinema_release  = as.Date(cinema_release,  format = "%d-%m-%Y"),
+    digital_release = as.Date(digital_release, format = "%d-%m-%Y")
+  )
+
 #Add COVID variable
 cinema_streaming_data <- cinema_streaming_data %>%
   mutate(COVID = ifelse(releaseYear %in% c(2020, 2021), 1, 0))
@@ -88,7 +94,6 @@ minimised_data <- cinema_streaming_data %>%
     viewing_90days,
     viewing_60days,
     viewing_30days,
-    budget,
     production_budget,
     runtimeMinutes,
     genres,
@@ -99,4 +104,11 @@ minimised_data <- cinema_streaming_data %>%
     releaseYear,
     COVID
   )
+
+#Inventory management
+rm(cinema_streaming_data, streaming_data)
+
+#Save minimislied dataset
+write.csv(minimised_data, "../data/minimised_data.csv", row.names = FALSE)
+
 
