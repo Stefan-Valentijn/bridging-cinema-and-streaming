@@ -27,8 +27,8 @@ merged_imdb <- raw_imdb_total %>% select(tconst,
 merged_imdb$startYear <- as.numeric(merged_imdb$startYear)
 merged_imdb$runtimeMinutes <- as.numeric(merged_imdb$runtimeMinutes)
 
-# Filter movies from 2022 onwards to align datasets, and they should have a rating
-imdb <- merged_imdb %>% filter(startYear >= 2017,
+# Filter movies from 2017 onwards to align datasets, and they should have a rating
+new_imdb <- merged_imdb %>% filter(startYear >= 2017,
                                !is.na(averageRating),
                                !is.na(runtimeMinutes),
                                numVotes >= 100)
@@ -37,4 +37,4 @@ imdb <- merged_imdb %>% filter(startYear >= 2017,
 rm(raw_title_basics, raw_title_ratings, raw_imdb_total, merged_imdb)
 
 # Convert imdb dataset to a csv-file
-write.csv(imdb, "../data/imdb.csv", row.names = FALSE)
+write.csv(new_imdb, "../data/imdb.csv", row.names = FALSE)

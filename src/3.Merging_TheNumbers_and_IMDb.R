@@ -176,7 +176,7 @@ filtered_moviedata <- merged_moviedata %>%
   )
 
 
-#Ensure there are no more duplicates
+#Ensure there are no more duplicates; this table should be empty
 filtered_moviedata %>%
   group_by(title) %>%
   filter(n() > 1) %>%
@@ -229,16 +229,5 @@ moviedata <- moviedata %>%
          IMDb_votecount
 )
 
-write.csv(moviedata, "../data/moviedata_full.csv", row.names = FALSE)
-
-
-
-# For now
-moviedata <- moviedata %>%
-  select(tconst, title, releaseDate, releaseYear)
-
-# Save
-write.csv(moviedata, "../data/moviedata_partly.csv", row.names = FALSE)
-
-
-
+# Save merged file
+write.csv(moviedata, "../data/moviedata.csv", row.names = FALSE)

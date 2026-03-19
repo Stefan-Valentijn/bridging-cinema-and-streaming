@@ -8,21 +8,17 @@ tmdb <- read.csv("../data/tmdb.csv")
 # Merge datasets
 merged_moviedata <- moviedata %>% left_join(tmdb, by = c("tconst" = "tconst"))
 
-# Inventory management
-rm(tmdb, moviedata)
-
 # Filter countries that have US as AT LEAST one of the production companies
 merged_moviedata <- merged_moviedata %>%
   filter(grepl("US", production_countries))
 
-# Reorder variables
-merged_moviedata <- merged_moviedata %>%
+# Reorder variables (title sanity check is left out)
+cinema_data <- merged_moviedata %>%
   select(
     tconst,
     id,
     title,
     title_sanitycheck,
-    releaseMonth,
     releaseYear,
     releaseDate,
     cinema_release,
@@ -42,5 +38,8 @@ merged_moviedata <- merged_moviedata %>%
     TMDB_votecount
   )
 
+# Inventory management
+rm(tmdb, moviedata, merged_moviedata)
+
 # Save file
-write.csv(merged_moviedata, "../data/merged_moviedata.csv", row.names = FALSE)
+write.csv(cinema_data, "../data/cinema_data.csv", row.names = FALSE)
