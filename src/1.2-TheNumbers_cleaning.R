@@ -10,10 +10,10 @@ thenumbers <- raw_thenumbers %>%
   select(-timestamp,
          -rank)
 
-# Filter movies with a release date since 2022
+#LET OP; NIEUWE VAN 2010-2023
 thenumbers <- thenumbers %>%
   mutate(release_date = mdy(release_year)) %>%
-  filter(release_date >= as.Date("2022-01-01"))
+  filter(release_date >= as.Date("2010-01-01") & release_date <= as.Date("2023-12-31"))
 
 # Set financial variables right (remove $-sign and numeric measurement level)
 thenumbers <- thenumbers %>%
@@ -24,11 +24,11 @@ thenumbers <- thenumbers %>%
   )
 
 # Filter out movies that were original movies (not released in cinema) or those who have yet to be released
-thenumbers <- thenumbers %>%
+new_thenumbers <- thenumbers %>%
   filter(domestic_gross != 0 & worldwide_gross != 0)
 
 # Inventory management
-rm(raw_thenumbers)
+rm(raw_thenumbers, thenumbers)
 
 # Convert the numbers dataset to a csv-file
-write.csv(thenumbers, "../data/thenumbers.csv", row.names = FALSE)
+write.csv(new_thenumbers, "../data/thenumbers.csv", row.names = FALSE)
