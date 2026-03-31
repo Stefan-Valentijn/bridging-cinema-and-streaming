@@ -27,11 +27,11 @@ merged_imdb <- raw_imdb_total %>% select(tconst,
 merged_imdb$startYear <- as.numeric(merged_imdb$startYear)
 merged_imdb$runtimeMinutes <- as.numeric(merged_imdb$runtimeMinutes)
 
-# Filter movies from 2017 onwards to align datasets, and they should have a rating
-new_imdb <- merged_imdb %>% filter(startYear >= 2017,
-                               !is.na(averageRating),
-                               !is.na(runtimeMinutes),
-                               numVotes >= 100)
+#LET OP; NIEUWE VAN 2010-2023
+new_imdb <- merged_imdb %>% filter(startYear >= 2010 & startYear <= 2023,
+                                   !is.na(averageRating),
+                                   !is.na(runtimeMinutes),
+                                   numVotes >= 100)
 
 # Inventory management
 rm(raw_title_basics, raw_title_ratings, raw_imdb_total, merged_imdb)
