@@ -13,13 +13,6 @@ tmdb <- raw_tmdb %>%
 tmdb$TMDB_votecount <- as.numeric(tmdb$TMDB_votecount)
 tmdb$budget <- as.numeric(tmdb$budget)
 
-# Convert date right
-tmdb <- tmdb %>%
-  mutate(
-    cinema_release = format(as.Date(cinema_release), "%d-%m-%Y"),
-    digital_release = format(as.Date(digital_release), "%d-%m-%Y")
-  )
-
 # Inventory management
 rm(raw_tmdb)
 

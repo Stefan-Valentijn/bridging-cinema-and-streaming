@@ -41,8 +41,9 @@ imdb <- imdb %>%
 # Merge for names that are the same
 merged_moviedata <- thenumbers %>% left_join(imdb, by = c("title" = "primaryTitle"))
 
-cat(sprintf("nrow(thenumbers) = %d is not equal to nrow(merged_moviedata) = %d", 
-            nrow(thenumbers), nrow(merged_moviedata)))
+# Check 
+nrow(thenumbers) 
+nrow(merged_moviedata) # is not equal, so there is double information
 
 # For movies with double info in the dataset, select the one corresponding to the release year of IMDb
 merged_moviedata <- merged_moviedata %>%
@@ -64,38 +65,114 @@ nrow(thenumbers)
 
 # But there are still missing tconst movies
 matched  <- merged_moviedata %>% filter(!is.na(tconst))
-missing  <- merged_moviedata %>% filter(is.na(tconst)) %>% select(title, release_year, production_budget, domestic_gross, worldwide_gross, release_date)
+missing  <- merged_moviedata %>% filter(is.na(tconst)) %>% select(title, release_year, production_budget, domestic_gross, worldwide_gross, release_date, tconst)
 
-missing_matched <- missing %>%
-  rowwise() %>%
-  mutate(
-    best_match = imdb$primaryTitle[which.max(stringsim(str_to_lower(title),
-                                                       str_to_lower(imdb$primaryTitle),
-                                                       method = "jw"))],
-    similarity = max(stringsim(str_to_lower(title),
-                               str_to_lower(imdb$primaryTitle),
-                               method = "jw"))
-  ) %>%
-  ungroup()
+# Ai claude has inspected the missing values and assessed whether the IMDb file has the right tconst
+missing_solved <- missing %>%
+  mutate(tconst = case_when(
+    title == "13 Assassins (十三人の刺客)" ~ "tt1436045",
+    title == "To Live!" ~ "tt1706433",
+    title == "21 And Over" ~ "tt1711425",
+    title == "A Very Harold & Kumar 3d Christmas" ~ "tt1268799",
+    title == "Goa" ~ "tt1421036",
+    title == "Jasmina" ~ "tt1482161",
+    title == "Alexander And The Terrible Horrible No Good …" ~ "tt1698641",
+    title == "An Inconvenient Sequel" ~ "tt6322922",
+    title == "Antarctic Edge 70º South" ~ "tt2780714",
+    title == "Carrie" ~ "tt1939659",
+    title == "Atlas Shrugged Part Ii" ~ "tt0480239",
+    title == "Axl" ~ "tt5709188",
+    title == "Beyond The Brick A Lego Brickumentary" ~ "tt3214286",
+    title == "Birds Of Prey (And The Fantabulous Emancipation…" ~ "tt7713068",
+    title == "Celeste And Jesse Forever" ~ "tt1405365",
+    title == "Cowboys And Aliens" ~ "tt0409847",
+    title == "Dark Phoenix" ~ "tt6565702",
+    title == "Daybreakers" ~ "tt1220627",
+    title == "Dc League Of Super Pets" ~ "tt8912936",
+    title == "Demon Slayer Kimetsu No Yaiba—The Movie Mugen…" ~ "tt11032374",
+    title == "Dr Seuss The Grinch" ~ "tt2709692",
+    title == "Dr Seuss The Lorax" ~ "tt1482459",
+    title == "Dragon Ball Super Broly (ドラゴンボール超スーパー ブロリー)…" ~ "tt7961060",
+    title == "Dune" ~ "tt11384400",
+    title == "El Clan" ~ "tt4411504",
+    title == "Ernest Et Celestine" ~ "tt1816518",
+    title == "Estiu 1993" ~ "tt5897636",
+    title == "Everybody Wants Some" ~ "tt2937696",
+    title == "Extremely Loud And Incredibly Close" ~ "tt0477302",
+    title == "Fast And Furious 6" ~ "tt1905041",
+    title == "Gnomeo And Juliet" ~ "tt0377981",
+    title == "Godzilla Minus One (ゴジラ最新作)" ~ "tt23289160",
+    title == "Harry Potter And The Deathly Hallows Part I" ~ "tt0926084",
+    title == "Harry Potter And The Deathly Hallows Part Ii" ~ "tt1201607",
+    title == "Hoodwinked Too Hood Vs Evil" ~ "tt0844993",
+    title == "How Do You Know?" ~ "tt1341188",
+    title == "John Wick Chapter 3 — Parabellum" ~ "tt6146586",
+    title == "John Wick Chapter Two" ~ "tt4425200",
+    title == "L!Fe Happens" ~ "tt1726589",
+    title == "Love And Other Drugs" ~ "tt0758752",
+    title == "Mamma Mia Here We Go Again!" ~ "tt6911608",
+    title == "Men In Black 3" ~ "tt1409024",
+    title == "Men Women And Children" ~ "tt3179568",
+    title == "Mission Impossible Dead Reckoning Part One" ~ "tt9603212",
+    title == "Mission Impossible—Fallout" ~ "tt4912910",
+    title == "Mission Impossible—Ghost Protocol" ~ "tt1229238",
+    title == "Mission Impossible—Rogue Nation" ~ "tt2381249",
+    title == "Mr Popperss Penguins" ~ "tt1396218",
+    title == "Oceans 8" ~ "tt5164214",
+    title == "Once Upon A Time…In Hollywood" ~ "tt7131622",
+    title == "Parasite (기생충)" ~ "tt6751668",
+    title == "Planes Fire And Rescue" ~ "tt2980706",
+    title == "Prince Of Persia Sands Of Time" ~ "tt0473075",
+    title == "Ratchet And Clank" ~ "tt2865120",
+    title == "Scary Movie V" ~ "tt0795461",
+    title == "Sh*Thouse" ~ "tt11618536",
+    title == "Shaun The Sheep" ~ "tt2872750",
+    title == "She\\S Out Of My League" ~ "tt0815236",
+    title == "Silent Hill Revelation 3d" ~ "tt0938330",
+    title == "Solitary Man" ~ "tt1327763",
+    title == "Spider-Man Into The Spider-Verse 3d" ~ "tt4633694",
+    title == "Spy Kids All The Time In The World" ~ "tt1517489",
+    title == "Spy!" ~ "tt3079380",
+    title == "Star Wars Ep Vii The Force Awakens" ~ "tt2488496",
+    title == "Star Wars Ep Viii The Last Jedi" ~ "tt2527336",
+    title == "Star Wars The Rise Of Skywalker" ~ "tt2527338",
+    title == "Taylor Swift | The Eras Tour" ~ "tt28814949",
+    title == "The Age Of Shadows (밀정)" ~ "tt4914580",
+    title == "The Assassin (刺客聶隱娘)" ~ "tt3508840",
+    title == "The Chronicles Of Narnia The Voyage Of The Daw…" ~ "tt0980970",
+    title == "The Disappearance Of Alice Creed" ~ "tt1572781",
+    title == "The Fantastic Four" ~ "tt1502712",
+    title == "The Ghouls" ~ "tt3613314",
+    title == "The Hangover 3" ~ "tt1951261",
+    title == "The Hitmans Wifes Bodyguard" ~ "tt8385148",
+    title == "The Old Man And The Gun" ~ "tt2837574",
+    title == "The Monkey King 2 (西游记之孙悟空三打白骨精)…" ~ "tt4591310",
+    title == "The Twilight Saga Breaking Dawn Part 1" ~ "tt1324999",
+    title == "The Twilight Saga Breaking Dawn Part 2" ~ "tt1673434",
+    title == "The Wandering Earth (流浪地球)" ~ "tt7605074",
+    title == "Tom And Jerry" ~ "tt1361336",
+    title == "Train To Busan (부산행)" ~ "tt5700672",
+    title == "Tucker & Dale Vs Evil" ~ "tt1465522",
+    title == "Victoria And Abdul" ~ "tt5816682",
+    title == "Walking With Dinosaurs" ~ "tt1762399",
+    title == "Wall Street 2 Money Never Sleeps" ~ "tt1027718",
+    title == "Yip Man 3" ~ "tt2888046",
+    TRUE ~ tconst  # keep existing if no match
+  ))
 
-#Filter the ones that are significantly related to the title
-missing_valid <- missing_matched %>%
-  filter(similarity >= 0.95)
-
-missing_complete <- missing_valid %>% left_join(imdb, by = c("best_match" = "primaryTitle"))
-
-#Remove columns for merging
-missing_complete <- missing_complete %>% select(-best_match, -similarity)
-
+# Remve obscure movies
+missing_solved <- missing_solved %>% filter(!is.na(tconst))
+missing_complete <- missing_solved %>% left_join(imdb, by = "tconst")
 
 # Merging final set
 moviedata <- bind_rows(matched, missing_complete)
+moviedata <- moviedata %>% select(-primaryTitle)
 
 # Inventory management
-rm(imdb, matched, merged_moviedata, missing, missing_complete, missing_matched, missing_valid, thenumbers)
+rm(matched, merged_moviedata, missing, missing_solved, missing_complete)
 
 # Adjust date variables
-final_moviedata <- moviedata %>%
+moviedata <- moviedata %>%
   mutate(IMDb_rating = averageRating,
          IMDb_votecount = numVotes,
          releaseDate = format(release_date, "%d-%m-%Y"),
@@ -103,7 +180,7 @@ final_moviedata <- moviedata %>%
          releaseMonth = month(releaseDate, label = TRUE, abbr = FALSE))
 
 # Reorder the dataset variables for clarity
-final_moviedata <- final_moviedata %>%
+moviedata <- moviedata %>%
   select(tconst, 
          title, 
          releaseDate,
@@ -118,17 +195,13 @@ final_moviedata <- final_moviedata %>%
          IMDb_votecount
   )
 
-# Dataset is now finalised
-colSums(is.na(final_moviedata))
+# Rename for clarity
+moviedata <- moviedata %>% rename(
+  release_cinema = releaseDate
+  )
 
 # Inventory mgt
-rm(moviedata)
+rm(imdb, thenumbers)
 
 # Save merged file
-write.csv(final_moviedata, "../data/moviedata.csv", row.names = FALSE)
-
-#For input dataset
-moviedata_newinput <- moviedata %>%
-  select(tconst, title, releaseDate, releaseYear, releaseMonth)
-
-write.csv(moviedata_newinput, "../data/moviedata_newinput.csv", row.names = FALSE)
+write.csv(moviedata, "../data/movie_data.csv", row.names = FALSE)
