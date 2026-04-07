@@ -13,8 +13,18 @@ tmdb <- raw_tmdb %>%
 tmdb$TMDB_votecount <- as.numeric(tmdb$TMDB_votecount)
 tmdb$budget <- as.numeric(tmdb$budget)
 
+
+# Filter countries that have US as AT LEAST one of the production companies
+tmdb <- tmdb %>%
+  filter(grepl("US", production_countries))
+
+
+
+# Rename
+new_cinema_streaming_data <- tmdb
+
 # Inventory management
-rm(raw_tmdb)
+rm(raw_tmdb, tmdb)
 
 # Save file
-write.csv(tmdb, "../data/tmdb.csv", row.names = FALSE)
+write.csv(new_cinema_streaming_data, "../data/new_cinema_streaming_data.csv", row.names = FALSE)
