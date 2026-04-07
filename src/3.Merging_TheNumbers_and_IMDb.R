@@ -7,6 +7,9 @@ library(stringdist)
 thenumbers <- read_csv("../data/thenumbers.csv")    # resulting from script 1.1 and 1.2
 imdb <- read_csv("../data/imdb.csv")                # resulting from script 2
 
+# The problem is that The Numbers does NOT have the identifier from IMDb or another platform, which is needed
+# in order to get the input dataset. Therefore, this script merges the two data streams into one
+
 # Spelling of the movies is highly sensitive to errors in matching. This is solved with
 thenumbers <- thenumbers %>%
   mutate(title = gsub("'|’|`|:|,|\\.", "", title) %>% str_to_title())
@@ -26,7 +29,7 @@ thenumbers <- thenumbers %>%
     TRUE ~ title
   ))
 
-#Rename
+# Rename double titled movies
 imdb <- imdb %>%
   mutate(primaryTitle = case_when(
     primaryTitle == "Robin Hood" & startYear == 2010 ~ "Robin Hood (2010)",
