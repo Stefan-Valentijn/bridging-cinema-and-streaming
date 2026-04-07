@@ -2,7 +2,7 @@
 library(tidyverse)
 
 #Load dataset
-df <- read_csv("../data/cinema_streaming_data.csv")
+df <- read_csv("../data/new_cinema_streaming_data.csv")
 
 #Remove missign cases for now
 df <- df %>%
