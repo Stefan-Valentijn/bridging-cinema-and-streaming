@@ -4,8 +4,8 @@ library(lubridate)
 library(stringdist)
 
 # Load data
-imdb <- read_csv("../data/imdb.csv")
-thenumbers <- read_csv("../data/thenumbers.csv")
+thenumbers <- read_csv("../data/thenumbers.csv")    # resulting from script 1.1 and 1.2
+imdb <- read_csv("../data/imdb.csv")                # resulting from script 2
 
 # Spelling of the movies is highly sensitive to errors in matching. This is solved with
 thenumbers <- thenumbers %>%
@@ -202,6 +202,10 @@ moviedata <- moviedata %>% rename(
 
 # Inventory mgt
 rm(imdb, thenumbers)
+
+# Impression dataset
+summary(moviedata)
+colSums(is.na(moviedata))
 
 # Save merged file
 write.csv(moviedata, "../data/movie_data.csv", row.names = FALSE)

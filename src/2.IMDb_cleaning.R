@@ -36,5 +36,9 @@ new_imdb <- merged_imdb %>% filter(startYear >= 2010 & startYear <= 2023,
 # Inventory management
 rm(raw_title_basics, raw_title_ratings, raw_imdb_total, merged_imdb)
 
+# Impression dataset
+summary(new_imdb)
+colSums(is.na(new_imdb))
+
 # Convert imdb dataset to a csv-file
 write.csv(new_imdb, "../data/imdb.csv", row.names = FALSE)

@@ -2,8 +2,8 @@
 library(tidyverse)
 
 # Load dataset
-cinema <- read_csv("../data/movie_data.csv")
-streaming <- read_csv("../data/streaming_data.csv")
+cinema <- read_csv("../data/movie_data.csv")          # resulting from script 3
+streaming <- read_csv("../data/streaming_data.csv")   # resulting from script 4
 
 # Merge based on tconst
 cinema_streaming_data <- streaming |> 
@@ -48,5 +48,9 @@ cinema_streaming_data <- cinema_streaming_data %>%
     COVID
   )
 
-#Save minimislied dataset
+# Impression dataset
+summary(cinema_streaming_data)
+colSums(is.na(cinema_streaming_data)) #no missing values
+
+# Save dataset
 write.csv(cinema_streaming_data, "../data/cinema_streaming_data.csv", row.names = FALSE)
