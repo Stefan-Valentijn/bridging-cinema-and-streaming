@@ -10,7 +10,7 @@ thenumbers <- raw_thenumbers %>%
   select(-timestamp,
          -rank)
 
-#LET OP; NIEUWE VAN 2010-2023
+# Attention: input data from 2010 to 2023
 thenumbers <- thenumbers %>%
   mutate(release_date = mdy(release_year)) %>%
   filter(release_date >= as.Date("2010-01-01") & release_date <= as.Date("2023-12-31"))
