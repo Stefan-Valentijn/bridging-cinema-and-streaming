@@ -195,8 +195,13 @@ moviedata <- moviedata %>%
          IMDb_votecount
   )
 
+# Rename for clarity
+moviedata <- moviedata %>% rename(
+  release_cinema = releaseDate
+  )
+
 # Inventory mgt
-rm(moviedata, imdb, thenumbers)
+rm(imdb, thenumbers)
 
 # Save merged file
-write.csv(moviedata, "../data/moviedata.csv", row.names = FALSE)
+write.csv(moviedata, "../data/movie_data.csv", row.names = FALSE)
