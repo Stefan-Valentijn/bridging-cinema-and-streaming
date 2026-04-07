@@ -41,8 +41,9 @@ imdb <- imdb %>%
 # Merge for names that are the same
 merged_moviedata <- thenumbers %>% left_join(imdb, by = c("title" = "primaryTitle"))
 
-cat(sprintf("nrow(thenumbers) = %d is not equal to nrow(merged_moviedata) = %d", 
-            nrow(thenumbers), nrow(merged_moviedata)))
+# Check 
+nrow(thenumbers) 
+nrow(merged_moviedata) # is not equal, so there is double information
 
 # For movies with double info in the dataset, select the one corresponding to the release year of IMDb
 merged_moviedata <- merged_moviedata %>%
@@ -159,29 +160,19 @@ missing_solved <- missing %>%
     TRUE ~ tconst  # keep existing if no match
   ))
 
-
 # Remve obscure movies
 missing_solved <- missing_solved %>% filter(!is.na(tconst))
-
-
 missing_complete <- missing_solved %>% left_join(imdb, by = "tconst")
-
 
 # Merging final set
 moviedata <- bind_rows(matched, missing_complete)
-
 moviedata <- moviedata %>% select(-primaryTitle)
-
 
 # Inventory management
 rm(matched, merged_moviedata, missing, missing_solved, missing_complete)
 
-
-
-
-
 # Adjust date variables
-final_moviedata <- moviedata %>%
+moviedata <- moviedata %>%
   mutate(IMDb_rating = averageRating,
          IMDb_votecount = numVotes,
          releaseDate = format(release_date, "%d-%m-%Y"),
@@ -189,7 +180,7 @@ final_moviedata <- moviedata %>%
          releaseMonth = month(releaseDate, label = TRUE, abbr = FALSE))
 
 # Reorder the dataset variables for clarity
-final_moviedata <- final_moviedata %>%
+moviedata <- moviedata %>%
   select(tconst, 
          title, 
          releaseDate,
@@ -204,43 +195,8 @@ final_moviedata <- final_moviedata %>%
          IMDb_votecount
   )
 
-
 # Inventory mgt
 rm(moviedata, imdb, thenumbers)
 
 # Save merged file
-write.csv(final_moviedata, "../data/moviedata_newinput.csv", row.names = FALSE)
-
-
-
-
-
-
-
-#ALTERNATIVE WAY. IS THIS PREFERRED?
-#missing_matched <- missing %>%
-# rowwise() %>%
-#mutate(
-# best_match = imdb$primaryTitle[which.max(stringsim(str_to_lower(title),
-#                                                   str_to_lower(imdb$primaryTitle),
-#                                                  method = "jw"))],
-#similarity = max(stringsim(str_to_lower(title),
-#                          str_to_lower(imdb$primaryTitle),
-#                         method = "jw"))
-#) %>%
-#ungroup()
-
-#Filter the ones that are significantly related to the title
-#missing_valid <- missing_matched %>%
-#  filter(similarity >= 0.95)
-
-#missing_complete <- missing_valid %>% left_join(imdb, by = c("best_match" = "primaryTitle"))
-
-#Remove columns for merging
-#missing_complete <- missing_complete %>% select(-best_match, -similarity)
-
-# Merging final set
-#moviedata <- bind_rows(matched, missing_complete)
-
-# Inventory management
-#rm(matched, merged_moviedata, missing, missing_complete, missing_matched, missing_valid)
+write.csv(moviedata, "../data/moviedata.csv", row.names = FALSE)
