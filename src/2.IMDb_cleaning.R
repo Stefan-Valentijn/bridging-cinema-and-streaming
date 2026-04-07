@@ -27,7 +27,7 @@ merged_imdb <- raw_imdb_total %>% select(tconst,
 merged_imdb$startYear <- as.numeric(merged_imdb$startYear)
 merged_imdb$runtimeMinutes <- as.numeric(merged_imdb$runtimeMinutes)
 
-#LET OP; NIEUWE VAN 2010-2023
+# Attention: input dataset from 2010 to 2023
 new_imdb <- merged_imdb %>% filter(startYear >= 2010 & startYear <= 2023,
                                    !is.na(averageRating),
                                    !is.na(runtimeMinutes),
