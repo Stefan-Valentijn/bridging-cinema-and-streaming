@@ -30,5 +30,9 @@ new_thenumbers <- thenumbers %>%
 # Inventory management
 rm(raw_thenumbers, thenumbers)
 
+# Impression dataset
+summary(new_thenumbers)
+colSums(is.na(new_thenumbers))
+
 # Convert the numbers dataset to a csv-file
 write.csv(new_thenumbers, "../data/thenumbers.csv", row.names = FALSE)
