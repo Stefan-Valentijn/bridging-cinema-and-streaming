@@ -56,6 +56,10 @@ merged_moviedata <- merged_moviedata %>%
   ungroup() %>%
   select(-release_year_num)
 
+# Check 
+nrow(thenumbers) 
+nrow(merged_moviedata) # is not equal, so there is still double information
+
 # There are still some duplicates, select the ones with the highest number of votes
 merged_moviedata <- merged_moviedata %>%
   group_by(title) %>%
@@ -66,7 +70,10 @@ merged_moviedata <- merged_moviedata %>%
 nrow(merged_moviedata)
 nrow(thenumbers)
 
-# But there are still missing tconst movies
+# Inspect how the dataset now looks
+colSums(is.na(merged_moviedata))
+
+# There are 270 movies for which there is no correct match with a tconst yet
 matched  <- merged_moviedata %>% filter(!is.na(tconst))
 missing  <- merged_moviedata %>% filter(is.na(tconst)) %>% select(title, release_year, production_budget, domestic_gross, worldwide_gross, release_date, tconst)
 
@@ -163,7 +170,7 @@ missing_solved <- missing %>%
     TRUE ~ tconst  # keep existing if no match
   ))
 
-# Remve obscure movies
+# Remove obscure movies
 missing_solved <- missing_solved %>% filter(!is.na(tconst))
 missing_complete <- missing_solved %>% left_join(imdb, by = "tconst")
 

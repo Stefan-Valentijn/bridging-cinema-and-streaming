@@ -20,6 +20,10 @@ cinema_streaming_data <- cinema_streaming_data %>%
     release_window    = as.numeric(difftime(release_streaming, release_cinema, units = "days"))
   )
 
+# Remove instances with negative release windows. that is not possible
+cinema_streaming_data <- cinema_streaming_data %>%
+  filter(release_window >= 0)
+
 # Add COVID variable
 cinema_streaming_data <- cinema_streaming_data %>%
   mutate(COVID = ifelse(releaseYear %in% c(2020, 2021), 1, 0))
