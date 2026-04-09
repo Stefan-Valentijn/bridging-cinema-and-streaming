@@ -52,6 +52,28 @@ cinema_streaming_data <- cinema_streaming_data %>%
     COVID
   )
 
+# Blockbuster score as a proxy of incorporating genres
+genre_scores <- cinema_streaming_data %>%
+  select(genres, worldwide_gross) %>%
+  mutate(genre = strsplit(genres, ",")) %>%
+  unnest(genre) %>%
+  mutate(genre = trimws(genre)) %>%
+  group_by(genre) %>%
+  summarise(mean_bo = mean(worldwide_gross, na.rm = TRUE)) %>%
+  arrange(desc(mean_bo))
+
+# Then normalise
+genre_weights <- genre_scores %>%
+  mutate(score = (mean_bo - min(mean_bo)) / (max(mean_bo) - min(mean_bo))) %>%
+  select(genre, score) %>%
+  deframe()
+
+cinema_streaming_data <- cinema_streaming_data %>%
+  mutate(blockbuster_score = sapply(genres, function(g) {
+    gs <- trimws(strsplit(g, ",")[[1]])
+    mean(genre_weights[gs], na.rm = TRUE)  # average across genres per film
+  }))
+
 # Impression dataset
 summary(cinema_streaming_data)
 colSums(is.na(cinema_streaming_data)) #no missing values
