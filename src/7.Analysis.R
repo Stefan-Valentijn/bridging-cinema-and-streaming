@@ -20,7 +20,23 @@ options(scipen = 999)
 
 # Run the model
 model <- lm(viewing_30days ~ domestic_gross_c * release_window_c + runtimeMinutes + COVID + IMDb_rating + 
-            production_budget, data = df); summary(model); 
+            production_budget + releaseYear + blockbuster_score, data = df); summary(model); 
 
 # Cleaner results
 round(summary(model)$coefficients, 3)
+
+df$production_budget_z <- scale(df$production_budget)
+df$domestic_gross_z    <- scale(df$domestic_gross)
+df$release_window_z    <- scale(df$release_window)
+
+process(
+  data = df,
+  y = "viewing_30days",
+  x = "production_budget_z",
+  m = "domestic_gross_z",
+  w = "release_window_z",
+  cov = "COVID",
+  model = 14,
+  boot = 5000,
+  seed = 123
+)
