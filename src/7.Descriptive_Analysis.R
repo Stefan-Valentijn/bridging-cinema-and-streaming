@@ -14,9 +14,6 @@ df %>%
   summarise(count = n()) %>%
   mutate(pct = round(count / sum(count) * 100, 1))
 
-
-
-
 # Descriptives of viewings
 df %>%
   summarise(across(c(viewing_30days, viewing_60days, viewing_90days),
