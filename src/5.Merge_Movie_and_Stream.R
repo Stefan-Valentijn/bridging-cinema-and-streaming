@@ -12,7 +12,7 @@ cinema_streaming_data <- streaming |>
 # Inventory management
 rm(cinema, streaming)
 
-# Calculate release window
+# Feature engineer release window
 cinema_streaming_data <- cinema_streaming_data %>%
   mutate(
     release_cinema    = as.Date(release_cinema,    format = "%d-%m-%Y"),
@@ -77,6 +77,9 @@ cinema_streaming_data <- cinema_streaming_data %>%
 # Impression dataset
 summary(cinema_streaming_data)
 colSums(is.na(cinema_streaming_data)) #no missing values
+
+# Inventory mangement
+rm(genre_scores, genre_weights)
 
 # Save dataset
 write.csv(cinema_streaming_data, "../data/cinema_streaming_data.csv", row.names = FALSE)
