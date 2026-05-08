@@ -3,7 +3,7 @@ library(tidyverse)
 library(lubridate)
 
 # Load dataset
-raw_tmdb <- read.csv("../data/raw/raw_tmdb.csv")
+raw_tmdb <- read.csv("../data/cinema_streaming_data_plus.csv")
 
 # Remove timestamp and title sanity check variables, that is metadata
 tmdb <- raw_tmdb %>%
@@ -13,18 +13,12 @@ tmdb <- raw_tmdb %>%
 tmdb$TMDB_votecount <- as.numeric(tmdb$TMDB_votecount)
 tmdb$budget <- as.numeric(tmdb$budget)
 
-
-# Filter countries that have US as AT LEAST one of the production companies
+# Correct date format without hour timestamp thing
 tmdb <- tmdb %>%
-  filter(grepl("US", production_countries))
-
-
-
-# Rename
-new_cinema_streaming_data <- tmdb
+  mutate(cinema_release = as.Date(substr(cinema_release, 1, 10)))
 
 # Inventory management
-rm(raw_tmdb, tmdb)
+rm(raw_tmdb)
 
 # Save file
-write.csv(new_cinema_streaming_data, "../data/new_cinema_streaming_data.csv", row.names = FALSE)
+write.csv(tmdb, "../data/tmdb.csv", row.names = FALSE)
