@@ -3,7 +3,7 @@ library(tidyverse)
 library(lubridate)
 
 # Load dataset
-raw_streaming <- read_csv("../data/raw/viewing_movies (2).csv")
+raw_streaming <- read_csv("../data/raw/viewing_movies (3).csv")
 
 # Impression dataset
 summary(raw_streaming)
