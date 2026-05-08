@@ -7,6 +7,10 @@ library(stringdist)
 thenumbers <- read_csv("../data/thenumbers.csv")    # resulting from script 1.1 and 1.2
 imdb <- read_csv("../data/imdb.csv")                # resulting from script 2
 
+###########
+# MERGING #
+###########
+
 # The problem is that The Numbers does NOT have the identifier from IMDb or another platform, which is needed
 # in order to get the input dataset. Therefore, this script merges the two data streams into one
 
@@ -189,29 +193,107 @@ moviedata <- moviedata %>%
          releaseYear = format(release_date, "%Y"),
          releaseMonth = month(releaseDate, label = TRUE, abbr = FALSE))
 
+# Rename for clarity
+moviedata <- moviedata %>% rename(
+  release_cinema = releaseDate
+)
+
+# Inventory mgt
+rm(imdb, thenumbers)
+
+#######################
+# FEATURE ENGINEERING #
+#######################
+
+# Feature engineering competition variable
+moviedata <- moviedata %>%
+  mutate(
+    release_cinema = dmy(release_cinema),
+    release_week = floor_date(release_cinema, "week"),
+  ) %>%
+  group_by(release_week) %>%
+  mutate(competition = n() - 1) %>%
+  ungroup()
+
+######
+
+# Feature engineering blockbuster score as a proxy of incorporating genres
+genre_scores <- moviedata %>%
+  select(genres, worldwide_gross) %>%
+  mutate(genre = strsplit(genres, ",")) %>%
+  unnest(genre) %>%
+  mutate(genre = trimws(genre)) %>%
+  group_by(genre) %>%
+  summarise(mean_bo = mean(worldwide_gross, na.rm = TRUE)) %>%
+  arrange(desc(mean_bo))
+
+# Then normalise
+genre_weights <- genre_scores %>%
+  mutate(score = (mean_bo - min(mean_bo)) / (max(mean_bo) - min(mean_bo))) %>%
+  select(genre, score) %>%
+  deframe()
+
+moviedata <- moviedata %>%
+  mutate(blockbuster_score = sapply(genres, function(g) {
+    gs <- trimws(strsplit(g, ",")[[1]])
+    mean(genre_weights[gs], na.rm = TRUE)  # average across genres per film
+  }))
+
+# Inventory management
+rm(genre_scores, genre_weights)
+
+######
+
+# Feature engineer COVID variable
+moviedata <- moviedata %>%
+  mutate(COVID = ifelse(release_cinema >= as.Date("2020-03-11") & 
+                        release_cinema <= as.Date("2022-03-01"), 1, 0))
+
+######
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+######
+
 # Reorder the dataset variables for clarity
 moviedata <- moviedata %>%
   select(tconst, 
          title, 
-         releaseDate,
          releaseYear,
          releaseMonth,
+         release_cinema,
          production_budget, 
          domestic_gross, 
          worldwide_gross,
          runtimeMinutes, 
          genres,
+         blockbuster_score,
          IMDb_rating, 
-         IMDb_votecount
+         IMDb_votecount,
+         COVID,
+         competition
   )
 
-# Rename for clarity
-moviedata <- moviedata %>% rename(
-  release_cinema = releaseDate
-  )
 
-# Inventory mgt
-rm(imdb, thenumbers)
 
 # Impression dataset
 summary(moviedata)
