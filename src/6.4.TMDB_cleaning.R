@@ -15,10 +15,14 @@ tmdb$budget <- as.numeric(tmdb$budget)
 
 # Correct date format without hour timestamp thing
 tmdb <- tmdb %>%
-  mutate(cinema_release = as.Date(substr(cinema_release, 1, 10)))
+  mutate(cinema_release_TMDB = as.Date(substr(cinema_release, 1, 10)))
 
 # Inventory management
 rm(raw_tmdb)
+
+# Variables not needed in hindsight
+tmdb <- tmdb %>%
+  select(-title_sanitycheck, -budget, -production_companies, -production_countries, -cinema_release, -digital_release)
 
 # Save file
 write.csv(tmdb, "../data/tmdb.csv", row.names = FALSE)
