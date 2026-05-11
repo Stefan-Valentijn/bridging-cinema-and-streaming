@@ -25,7 +25,7 @@ complete_data <- complete_data %>%
   select(-IMDb_rating, -IMDb_votecount, -TMDB_rating, -TMDB_votecount)
 
 # Reorder for clarity
-data <- complete_data %>%
+complete_data <- complete_data %>%
   select(
     tconst,
     id,
@@ -33,7 +33,6 @@ data <- complete_data %>%
     releaseYear,
     releaseMonth,
     release_cinema,
-    cinema_release_TMDB,
     release_streaming,
     viewing_30days,
     streaming_platform,
@@ -50,10 +49,10 @@ data <- complete_data %>%
   )
 
 # Sanity check dataset
-colSums(is.na(data)) #no issues
+colSums(is.na(complete_data)) #no issues
 
 # Inventory management
-rm(cinema_streaming_data, complete_data, tmdb)
+rm(cinema_streaming_data, tmdb)
 
 # Save dataset
-write.csv(data, "../data/data.csv", row.names = FALSE)
+write.csv(complete_data, "../data/complete_data.csv", row.names = FALSE)

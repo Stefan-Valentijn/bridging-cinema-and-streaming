@@ -14,8 +14,8 @@ tmdb$TMDB_votecount <- as.numeric(tmdb$TMDB_votecount)
 tmdb$budget <- as.numeric(tmdb$budget)
 
 # Correct date format without hour timestamp thing
-tmdb <- tmdb %>%
-  mutate(cinema_release_TMDB = as.Date(substr(cinema_release, 1, 10)))
+#tmdb <- tmdb %>%
+#  mutate(cinema_release_TMDB = as.Date(substr(cinema_release, 1, 10)))
 
 # Inventory management
 rm(raw_tmdb)
