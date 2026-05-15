@@ -46,7 +46,8 @@ imdb <- imdb %>%
   ))
 
 # Merge for names that are the same
-merged_moviedata <- thenumbers %>% left_join(imdb, by = c("title" = "primaryTitle"))
+merged_moviedata <- thenumbers %>% 
+  left_join(imdb, by = c("title" = "primaryTitle"))
 
 # Check 
 nrow(thenumbers) 
@@ -189,7 +190,7 @@ rm(matched, merged_moviedata, missing, missing_solved, missing_complete)
 moviedata <- moviedata %>%
   mutate(IMDb_rating = averageRating,
          IMDb_votecount = numVotes,
-         releaseDate = format(release_date, "%d-%m-%Y"),
+         releaseDate = format(release_date, "%Y-%m-%d"),
          releaseYear = format(release_date, "%Y"),
          releaseMonth = month(releaseDate, label = TRUE, abbr = FALSE))
 
@@ -204,18 +205,6 @@ rm(imdb, thenumbers)
 #######################
 # FEATURE ENGINEERING #
 #######################
-
-# Feature engineering competition variable
-moviedata <- moviedata %>%
-  mutate(
-    release_cinema = dmy(release_cinema),
-    release_week = floor_date(release_cinema, "week"),
-  ) %>%
-  group_by(release_week) %>%
-  mutate(competition = n() - 1) %>%
-  ungroup()
-
-######
 
 # Feature engineering blockbuster score as a proxy of incorporating genres
 genre_scores <- moviedata %>%
@@ -244,56 +233,24 @@ rm(genre_scores, genre_weights)
 
 ######
 
-# Feature engineer COVID variable
+# Remove variables not needed for further analysis
 moviedata <- moviedata %>%
-  mutate(COVID = ifelse(release_cinema >= as.Date("2020-03-11") & 
-                        release_cinema <= as.Date("2022-03-01"), 1, 0))
-
-######
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-######
+  select(-release_year, -release_date, -releaseYear, -releaseMonth, -startYear, -averageRating, -numVotes)
 
 # Reorder the dataset variables for clarity
 moviedata <- moviedata %>%
-  select(tconst, 
-         title, 
-         releaseYear,
-         releaseMonth,
+  select(tconst,
+         title,
          release_cinema,
-         production_budget, 
-         domestic_gross, 
+         production_budget,
+         domestic_gross,
          worldwide_gross,
-         runtimeMinutes, 
+         runtimeMinutes,
          genres,
          blockbuster_score,
-         IMDb_rating, 
-         IMDb_votecount,
-         COVID,
-         competition
-  )
-
-
+         IMDb_rating,
+         IMDb_votecount
+         )
 
 # Impression dataset
 summary(moviedata)

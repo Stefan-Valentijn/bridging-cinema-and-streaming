@@ -33,18 +33,20 @@ table(cut(abs(validated_data$date_diff),
 # Rename IMDb release date to contemporary one
 validated_data <- validated_data %>%
   rename(release_cinema_wide = us_release_date) %>%
-  relocate(release_cinema_wide, .before = release_streaming)
+  relocate(release_cinema_wide, .after = title)
 
 # Replace values
 validated_data <- validated_data %>%
   mutate(
     releaseYear  = year(release_cinema_wide),
     releaseMonth = month(release_cinema_wide, label = TRUE, abbr = FALSE)
-  )
+  ) %>%
+  relocate(releaseYear,  .after = title) %>%
+  relocate(releaseMonth, .after = releaseYear)
 
 # Remove variables
 validated_data <- validated_data %>%
-  select(-release_cinema, -us_release_date_raw, -notes, -date_diff)
+  select(-us_release_date_raw, -release_cinema, -notes, -date_diff)
 
 # Save file
 write.csv(validated_data, "../data/validated_data.csv", row.names = FALSE)

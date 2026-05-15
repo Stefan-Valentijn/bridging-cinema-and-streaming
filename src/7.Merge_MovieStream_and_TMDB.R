@@ -9,6 +9,9 @@ tmdb <- read_csv("../data/tmdb.csv")
 complete_data <- cinema_streaming_data %>%
   left_join(tmdb, by = "tconst")
 
+# Inventory management
+rm(cinema_streaming_data, tmdb)
+
 # Simplify the dataset by creating weighted average rating
 complete_data <- complete_data %>%
   mutate(
@@ -30,29 +33,23 @@ complete_data <- complete_data %>%
     tconst,
     id,
     title,
-    releaseYear,
-    releaseMonth,
     release_cinema,
     release_streaming,
     viewing_30days,
     streaming_platform,
+    budget,
     production_budget,
     domestic_gross,
     worldwide_gross,
-    runtimeMinutes,
     genres,
     blockbuster_score,
+    runtimeMinutes,
     averageRating,
-    numVotes,
-    COVID,
-    competition
+    numVotes
   )
 
 # Sanity check dataset
 colSums(is.na(complete_data)) #no issues
-
-# Inventory management
-rm(cinema_streaming_data, tmdb)
 
 # Save dataset
 write.csv(complete_data, "../data/complete_data.csv", row.names = FALSE)
