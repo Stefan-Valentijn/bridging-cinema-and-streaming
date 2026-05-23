@@ -21,5 +21,22 @@ finaldataset <- cinestreamdata %>%
 # Inventory mgt
 rm(bom1, bom2, cinestreamdata)
 
+# Make it neat
+finaldataset <- finaldataset %>%
+  relocate(domestic_opening, .after = production_budget)
+
+# Two movies have na, after research these are manually coded to
+finaldataset <- finaldataset %>%
+  mutate(domestic_opening = case_when(
+    tconst == "tt1838556" ~ 3607966,
+    tconst == "tt7734218" ~ 8225384,
+    TRUE ~ domestic_opening
+  ))
+
+# See if opening DV is legit
+cor.test(finaldataset$domestic_opening, finaldataset$domestic_gross)
+# highly sig correlate so yes
+
 # Save dataset
 write.csv(finaldataset, "../data/finaldataset.csv", row.names = FALSE)
+

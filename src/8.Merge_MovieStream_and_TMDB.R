@@ -2,15 +2,15 @@
 library(tidyverse)
 
 # Load dataset
-cinema_streaming_data <- read_csv("../data/cinema_streaming_data.csv")
+validated_data <- read_csv("../data/validated_data.csv")
 tmdb <- read_csv("../data/tmdb.csv")
 
 # Merge based on tconst
-complete_data <- cinema_streaming_data %>%
+complete_data <- validated_data %>%
   left_join(tmdb, by = "tconst")
 
 # Inventory management
-rm(cinema_streaming_data, tmdb)
+rm(validated_data, tmdb)
 
 # Simplify the dataset by creating weighted average rating
 complete_data <- complete_data %>%
