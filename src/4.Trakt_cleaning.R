@@ -20,7 +20,7 @@ streaming_data <- raw_streaming %>%
   distinct() %>%
   ungroup()
 
-# If there are multiple release dates, the oldest one is taken
+# If there are multiple release dates, the earliest one is taken
 streaming_data <- streaming_data %>%
   group_by(tconst) %>%
   filter(release_day == min(release_day, na.rm = TRUE)) %>%

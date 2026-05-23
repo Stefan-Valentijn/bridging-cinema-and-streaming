@@ -42,3 +42,4 @@ colSums(is.na(new_imdb))
 
 # Convert imdb dataset to a csv-file
 write.csv(new_imdb, "../data/imdb.csv", row.names = FALSE)
+
