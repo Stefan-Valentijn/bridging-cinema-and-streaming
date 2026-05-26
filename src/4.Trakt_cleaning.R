@@ -33,10 +33,6 @@ length(unique(streaming_data$tconst)) # the amount of movie
 # Assess the correlation between the different dependent variables
 cor(raw_streaming[, c("viewing_30days", "viewing_60days", "viewing_90days")]) # all of them are highly correlated
 
-# Methodology explains only the 30-day variable is taken for further research
-streaming_data <- streaming_data %>%
-  select(-viewing_90days, -viewing_60days)
-
 # Rename variables for clarity
 streaming_data <- streaming_data %>%
   rename(streaming_platform = service,

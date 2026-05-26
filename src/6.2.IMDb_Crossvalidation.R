@@ -51,11 +51,6 @@ validated_data <- validated_data %>%
 validated_data <- validated_data %>%
   select(-us_release_date_raw, -release_cinema, -notes, -date_diff)
 
-# Feature engineer COVID variable
-validated_data <- validated_data %>%
-  mutate(COVID = ifelse(release_cinema_wide >= as.Date("2020-03-17") & 
-                          release_cinema_wide <= as.Date("2022-03-31"), 1, 0))
-
 # Feature engineer release window
 validated_data <- validated_data %>%
   mutate(
