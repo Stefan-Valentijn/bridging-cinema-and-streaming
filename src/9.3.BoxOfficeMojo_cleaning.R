@@ -2,7 +2,7 @@
 library(tidyverse)
 
 # Load datasets
-cinestreamdata <- read_csv("../data/cinestreamdata.csv")
+complete_data <- read_csv("../data/complete_data.csv")
 bom1 <- read_csv("../data/part1_boxofficemojo.csv")
 bom2 <- read_csv("../data/part2_boxofficemojo.csv")
 
@@ -14,12 +14,12 @@ bom2 <- bom2 %>%
   select(tconst, domestic_opening)
 
 # Merge
-finaldataset <- cinestreamdata %>%
+finaldataset <- complete_data %>%
   left_join(bom1, by = "tconst") %>%
   left_join(bom2, by = "tconst")
 
 # Inventory mgt
-rm(bom1, bom2, cinestreamdata)
+rm(bom1, bom2, complete_data)
 
 # Make it neat
 finaldataset <- finaldataset %>%
@@ -39,4 +39,3 @@ cor.test(finaldataset$domestic_opening, finaldataset$domestic_gross)
 
 # Save dataset
 write.csv(finaldataset, "../data/finaldataset.csv", row.names = FALSE)
-
