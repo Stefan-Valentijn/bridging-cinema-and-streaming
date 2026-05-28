@@ -1,6 +1,5 @@
 # Load libraries
 library(tidyverse)
-library(lubridate)
 
 # Load dataset
 raw_streaming <- read_csv("../data/raw/viewing_movies (3).csv")

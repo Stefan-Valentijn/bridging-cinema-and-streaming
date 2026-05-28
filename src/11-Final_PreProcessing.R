@@ -1,10 +1,5 @@
 # Load libraries
 library(tidyverse)
-library(lm.beta)
-library(ivreg)
-library(lmtest)
-library(sandwich)
-library(car)
 library(moments)
 
 # Load dataset
