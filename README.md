@@ -75,7 +75,7 @@ bridging-cinema-and-streaming/
 │  ├─ 14-Ordinary_Least_Squares_Regression.R
 │  └─ 15-HAYES process tool code.R
 └─ README.md
-```text
+```
 
 ## Dependencies
 
