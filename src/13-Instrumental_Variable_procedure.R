@@ -1,23 +1,26 @@
 # Load libraries
 library(tidyverse)
-library(lm.beta)
-library(ivreg)
-library(lmtest)
-library(sandwich)
 library(car)
 
 # Load dataset
-df <- read_csv("../data/finaldataset.csv", show_col_types = FALSE)
+df <- read_csv("../data/bridging_cinema_and_streaming.csv", show_col_types = FALSE)
+
+# Ensure fixed effects settings are correct
+df <- df %>%
+  mutate(
+    month_year_fe = relevel(factor(month_year_fe), ref = "2017-06"),
+    platform_fe   = relevel(factor(platform_fe),   ref = "disney")
+  )
 
 ###############################################################################################################
 
 # Step 1: Reduced Form
 # Domestic opening is not taken but instead the instruments
-reducedform <- lm(log_viewing ~                                                  # dependent variable
+reducedform <- lm(log_viewing30 ~                                                  # dependent variable
                     release_window_c +                                             # moderator
                     new_releases_c +                                               # instrument
                     newReleases_x_releaseWindow +                                  # instrument x moderator
-                    averageRating + blockbuster_score + production_budget +        # control variables
+                    averageRating + blockbuster_score + log_production_budget +    # control variables
                     platform_fe + month_year_fe,                                   # fixed effects
                   data = df); summary(reducedform)
 
@@ -28,11 +31,11 @@ reducedform <- lm(log_viewing ~                                                 
 
 # Step 2a: First Stage 
 # Domestic opening is now the predicted variable
-firststage <- lm(log_domestic_opening_c ~                                        # dependent variable
+firststage <- lm(log_domestic_opening_c ~                                         # dependent variable
                    release_window_c +                                             # moderator
                    new_releases_c +                                               # instrument
                    newReleases_x_releaseWindow +                                  # instrument x moderator
-                   averageRating + blockbuster_score + production_budget +        # control variables
+                   averageRating + blockbuster_score + log_production_budget +    # control variables
                    platform_fe + month_year_fe,                                   # fixed effects
                  data = df); summary(firststage)
 
@@ -51,7 +54,7 @@ interaction <- lm(domesticOpening_x_releaseWindow ~                             
                     release_window_c +                                              # moderator
                     new_releases_c +                                                # instrument
                     newReleases_x_releaseWindow +                                   # instrument x moderator
-                    averageRating + blockbuster_score + production_budget +         # control variables
+                    averageRating + blockbuster_score + log_production_budget +     # control variables
                     platform_fe + month_year_fe,                                    # fixed effects
                   data = df); summary(interaction)
 
@@ -69,14 +72,12 @@ linearHypothesis(interaction, "newReleases_x_releaseWindow = 0", test = "F")
 df$firststage_residuals        <- residuals(firststage)   # residuals from domestic_opening_c first stage
 df$interaction_residuals       <- residuals(interaction)  # residuals from interaction term first stage
 
-hausman_model <- lm(log_viewing ~                                                     # dependent variable
+hausman_model <- lm(log_viewing30 ~                                                     # dependent variable
                       log_domestic_opening_c + domesticOpening_x_releaseWindow +        # main predictor + interaction
                       release_window_c +                                                # moderator
-                      averageRating + blockbuster_score + production_budget +           # control variables
+                      averageRating + blockbuster_score + log_production_budget +       # control variables
                       platform_fe + month_year_fe +                                     # fixed effects
                       firststage_residuals + interaction_residuals,                     # first stage residuals
                     data = df); summary(hausman_model)
 
 # Interpretation: residuals NOT significant means endogeneity is NOT a serious problem, therefore use OLS instead of 2SLS
-
-###############################################################################################################

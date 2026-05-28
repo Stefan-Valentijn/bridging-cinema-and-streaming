@@ -2,18 +2,18 @@
 library(tidyverse)
 
 # Load dataset
-validated_data <- read_csv("../data/validated_data.csv")
+interdataset <- read_csv("../data/interdataset.csv")
 tmdb <- read_csv("../data/tmdb.csv")
 
 # Merge based on tconst
-complete_data <- validated_data %>%
+finaldataset <- interdataset %>%
   left_join(tmdb, by = "tconst")
 
 # Inventory management
-rm(validated_data, tmdb)
+rm(interdataset, tmdb)
 
 # Simplify the dataset by creating weighted average rating
-complete_data <- complete_data %>%
+finaldataset <- finaldataset %>%
   mutate(
     averageRating = (IMDb_rating * IMDb_votecount + TMDB_rating * TMDB_votecount) / 
       (IMDb_votecount + TMDB_votecount),
@@ -21,19 +21,20 @@ complete_data <- complete_data %>%
   )
 
 # Round it to 2
-complete_data$averageRating <- round(complete_data$averageRating, 2)
+finaldataset$averageRating <- round(finaldataset$averageRating, 2)
 
 # Remove original rating variables
-complete_data <- complete_data %>%
+finaldataset <- finaldataset %>%
   select(-IMDb_rating, -IMDb_votecount, -TMDB_rating, -TMDB_votecount)
 
 # Reorder for clarity
-complete_data <- complete_data %>%
+finaldataset <- finaldataset %>%
   select(
     tconst,
     id,
     title,
     releaseYear,
+    new_releases,
     release_cinema_wide,
     release_streaming,
     release_window,
@@ -43,6 +44,7 @@ complete_data <- complete_data %>%
     streaming_platform,
     budget,
     production_budget,
+    domestic_opening,
     domestic_gross,
     worldwide_gross,
     genres,
@@ -53,7 +55,7 @@ complete_data <- complete_data %>%
   )
 
 # Sanity check dataset
-colSums(is.na(complete_data)) #no issues
+colSums(is.na(finaldataset)) #no issues
 
 # Save dataset
-write.csv(complete_data, "../data/complete_data.csv", row.names = FALSE)
+write.csv(finaldataset, "../data/finaldataset.csv", row.names = FALSE)

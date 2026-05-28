@@ -67,15 +67,5 @@ ggplot(validated_data, aes(x = release_window)) +
 validated_data <- validated_data %>%
   filter(release_window >= 0)
 
-# Crossvalidation of budget can now take place
-#budget_deviations <- validated_data %>%
-# filter(!is.na(budget) & !is.na(production_budget)) %>%
-#filter(budget != production_budget) %>%
-#select(tconst, title, budget, production_budget) %>%
-#mutate(budget_diff = budget - production_budget)
-
-#validated_data <- validated_data %>%
-#filter(is.na(budget) | is.na(production_budget) | budget == production_budget)
-
 # Save file
 write.csv(validated_data, "../data/validated_data.csv", row.names = FALSE)
