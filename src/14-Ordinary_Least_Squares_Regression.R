@@ -5,7 +5,7 @@ library(lmtest)
 library(car)
 
 # Load dataset
-df <- read_csv("../data/bridging_cinema_and_streaming.csv", show_col_types = FALSE)
+df <- read_csv("../data/bridging_cinema_and_streaming.csv")
 
 # Ensure fixed effects settings are correct
 df <- df %>%
