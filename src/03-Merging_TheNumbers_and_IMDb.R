@@ -14,6 +14,11 @@ imdb <- read_csv("../data/imdb.csv")                # resulting from script 2
 # The problem is that The Numbers does NOT have the identifier from IMDb or another platform, which is needed
 # in order to get the input dataset. Therefore, this script merges the two data streams into one
 
+# The IMDb dataset is scaled down to ease the forthcoming merge
+imdb <- imdb %>% filter(!is.na(averageRating))
+imdb <- imdb %>% filter(!is.na(runtimeMinutes))
+imdb <- imdb %>% filter(numVotes >= 100)
+
 # Spelling of the movies is highly sensitive to errors in matching. This is solved with
 thenumbers <- thenumbers %>%
   mutate(title = gsub("'|’|`|:|,|\\.", "", title) %>% str_to_title())
@@ -208,12 +213,12 @@ rm(imdb, thenumbers)
 
 # Feature engineering blockbuster score as a proxy of incorporating genres
 genre_scores <- moviedata %>%
-  select(genres, worldwide_gross) %>%
+  select(genres, domestic_gross) %>%
   mutate(genre = strsplit(genres, ",")) %>%
   unnest(genre) %>%
   mutate(genre = trimws(genre)) %>%
   group_by(genre) %>%
-  summarise(mean_bo = mean(worldwide_gross, na.rm = TRUE)) %>%
+  summarise(mean_bo = mean(domestic_gross, na.rm = TRUE)) %>%
   arrange(desc(mean_bo))
 
 # Then normalise

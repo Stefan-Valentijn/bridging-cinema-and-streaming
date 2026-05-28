@@ -1,11 +1,6 @@
 # Load libraries
 library(tidyverse)
 
-# The size of the original basics file is too computationally expensive, therefore this has been narrowed done once via
-# raw_title_basics <- read_tsv("title.basics.tsv")
-# raw_title_basics <- raw_title_basics %>% filter(titleType == "movie")
-# write.csv(raw_title_basics, "raw_title_basics.csv", row.names = FALSE)
-
 # Import datasets
 raw_title_basics <- read_csv("../data/raw/raw_title_basics.csv")
 raw_title_ratings <- read_tsv("../data/raw/raw_title.ratings.tsv")
@@ -29,9 +24,6 @@ merged_imdb$runtimeMinutes <- as.numeric(merged_imdb$runtimeMinutes)
 
 # Attention: input dataset from 2010 to 2023
 new_imdb <- merged_imdb %>% filter(startYear >= 2010 & startYear <= 2023)
-new_imdb <- new_imdb %>% filter(!is.na(averageRating))
-new_imdb <- new_imdb %>% filter(!is.na(runtimeMinutes))
-new_imdb <- new_imdb %>% filter(numVotes >= 100)
 
 # Inventory management
 rm(raw_title_basics, raw_title_ratings, raw_imdb_total, merged_imdb)
@@ -42,4 +34,3 @@ colSums(is.na(new_imdb))
 
 # Convert imdb dataset to a csv-file
 write.csv(new_imdb, "../data/imdb.csv", row.names = FALSE)
-

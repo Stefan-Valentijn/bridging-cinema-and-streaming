@@ -2,14 +2,44 @@
 library(tidyverse)
 
 # Load dataset
-df <- read_csv("../data/finaldataset.csv")
+df <- read_csv("../data/bridging_cinema_and_streaming.csv")
 
 # Impression dataset
 summary(df)
 colSums(is.na(df))
 
+################################
+# PART 1: CONTINUOUS VARIABLES #
+################################
+
+continuous_vars <- c(
+  "viewing_30days",
+  "log_viewing30",
+  "domestic_opening",
+  "log_domestic_opening",
+  "release_window",
+  "production_budget",
+  "log_production_budget",
+  "averageRating",
+  "blockbuster_score"
+)
+
+# Minimum, maximum, mean and standard deviation
+continuous_table <- df %>%
+  select(all_of(continuous_vars)) %>%
+  pivot_longer(everything(), names_to = "Variable", values_to = "Value") %>%
+  group_by(Variable) %>%
+  summarise(
+    Min = round(min(Value,  na.rm = TRUE), 2),
+    Max = round(max(Value,  na.rm = TRUE), 2),
+    M   = round(mean(Value, na.rm = TRUE), 2),
+    SD  = round(sd(Value,   na.rm = TRUE), 2),
+    .groups = "drop"
+  ) %>%
+  arrange(match(Variable, continuous_vars)); print(continuous_table)
+
 #################################
-# PART 1: CATEGORICAL VARIABLES #
+# PART 2: CATEGORICAL VARIABLES #
 #################################
 
 n_total <- nrow(df)
@@ -61,32 +91,42 @@ genre_rows <- df %>%
   ) %>%
   select(Group, Variable, N, Pct); print(genre_rows) %>% print(n = Inf)
 
-################################
-# PART 2: CONTINUOUS VARIABLES #
-################################
 
-continuous_vars <- c(
-  "viewing_30days",
-  "domestic_opening",
-  "release_window",
-  "production_budget",
-  "averageRating",
-  "blockbuster_score"
-)
 
-# Minimum, maximum, mean and standard deviation
-continuous_table <- df %>%
-  select(all_of(continuous_vars)) %>%
-  pivot_longer(everything(), names_to = "Variable", values_to = "Value") %>%
-  group_by(Variable) %>%
-  summarise(
-    Min = round(min(Value,  na.rm = TRUE), 2),
-    Max = round(max(Value,  na.rm = TRUE), 2),
-    M   = round(mean(Value, na.rm = TRUE), 2),
-    SD  = round(sd(Value,   na.rm = TRUE), 2),
-    .groups = "drop"
-  ) %>%
-  arrange(match(Variable, continuous_vars)); print(continuous_table)
+
+
+
+
+
+
+library(ggplot2)
+
+# Domestic opening quartile plot
+p1 <- ggplot(df, aes(x = factor(domestic_opening_quartile), y = viewing_30days)) +
+  geom_boxplot(fill = "steelblue", outlier.alpha = 0.3) +
+  labs(
+    title = "Streaming Performance by Domestic Opening Quartile",
+    x = "Domestic Opening Quartile",
+    y = "Views (first 30 days)"
+  ) +
+  theme_minimal()
+
+# Release window quartile plot
+p2 <- ggplot(df, aes(x = factor(release_window_quartile), y = viewing_30days)) +
+  geom_boxplot(fill = "steelblue", outlier.alpha = 0.3) +
+  labs(
+    title = "Streaming Performance by Release Window Quartile",
+    x = "Release Window Quartile",
+    y = "Views (first 30 days)"
+  ) +
+  theme_minimal()
+
+library(patchwork)
+p1 / p2
+
+
+
+
 
 ################################
 # PART 3: INTERESTING PATTERNS #
@@ -217,6 +257,3 @@ ggplot(release_window_year, aes(x = releaseYear, y = M)) +
 
 # Descriptives show Disney+ behaves differently
 df$platformDisney <- ifelse(df$streaming_platform == "disney", 1, 0)
-
-# Save dataset
-write.csv(df, "../data/finaldataset.csv", row.names = FALSE)
