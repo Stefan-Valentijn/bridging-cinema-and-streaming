@@ -3,5 +3,5 @@
 .RData
 .Ruserdata
 bridging-cinema-and-streaming.Rproj
-data
 src/.ipynb_checkpoints
+data/
