@@ -1,6 +1,5 @@
 # Load libraries
 library(tidyverse)
-library(lubridate)
 
 # Load dataset
 part1_raw_tmdb <- read.csv("../data/part1_raw_tmdb.csv")

@@ -1,7 +1,6 @@
 # Load libraries
 library(tidyverse)
 library(lubridate)
-library(stringdist)
 
 # Load data
 thenumbers <- read_csv("../data/thenumbers.csv")    # resulting from script 1.1 and 1.2
