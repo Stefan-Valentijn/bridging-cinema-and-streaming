@@ -88,6 +88,4 @@ The moderated mediation analysis additionally relies on the **Hayes PROCESS macr
 
 ## About
 
-This project is the Master's thesis for the [Marketing Analytics](https://www.tilburguniversity.edu/education/masters-programs/marketing-analytics) program at [Tilburg University](https://www.tilburguniversity.edu/), the Netherlands. The project is implemented by:
-
-- Stefan Valentijn
+This GitHub repository is a supplement to Stefan Valentijn's thesis for the [Master of Science Marketing Analytics](https://www.tilburguniversity.edu/education/masters-programs/marketing-analytics) program at [Tilburg University](https://www.tilburguniversity.edu/), the Netherlands.
