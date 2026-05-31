@@ -8,34 +8,25 @@ The cinema-to-streaming relationship remains underexplored despite the growing a
 
 *To what extent does the cinema performance of a movie predict its subsequent streaming performance, and what role does the release window play?*
 
+## Hypotheses
+
+| Numer | Expectation |
+|:-----------|:----------|
+| **H1** | A stronger cinema performance has a positive effect on the subsequent streaming performance. |
+| **H2** | A shorter release window is associated with greater streaming performance. |
+| **H3** | A shorter release window amplifies the positive relationship between cinema performance and streaming performance. |
+ 
 ## Data
 
-Five data sources were consulted and merged into a single analytical dataset (*n* = 345), covering US-released Hollywood productions from 2017 to 2022:
+In order to test the hypotheses, five data sources were consulted  and merged into a single dataset (*n* = 345), covering historical data on movies released in the United States between 2017-2022:
 
 | Source | Variables retrieved |
 |---|---|
-| [Trakt.tv](https://trakt.tv/) | 30-, 60-, and 90-day streaming viewing figures; streaming release date |
-| [Box Office Mojo](https://www.boxofficemojo.com/) | Domestic opening weekend gross |
-| [IMDb](https://developer.imdb.com/non-commercial-datasets/) | Wide US cinema release date; genre; runtime; consumer rating; vote count |
+| [Trakt.tv](https://trakt.tv/) | 30-, 60-, and 90-day streaming viewing figures |
+| [Box Office Mojo](https://www.boxofficemojo.com/) | Domestic opening box office |
+| [IMDb](https://developer.imdb.com/non-commercial-datasets/) | Wide US cinema release date; genre; consumer rating; vote count |
 | [The Numbers](https://www.the-numbers.com/movie/budgets/) | Production budget; domestic gross; worldwide gross |
 | [TMDB](https://developer.themoviedb.org/) | Consumer rating; vote count; production budget (robustness check) |
-
-The analytical dataset contains the following variables:
-
-| Variable | Type | Definition |
-|---|---|---|
-| `viewing_30days` | integer | Unique viewing instances in the first 30 days after streaming release |
-| `domestic_opening` | integer | Domestic opening weekend gross in dollars |
-| `release_window` | integer | Days between wide cinema release and streaming release |
-| `production_budget` | integer | Cost of producing and distributing a movie in dollars |
-| `blockbuster_score` | numeric | Genre-based normalised weight of historical domestic theatrical performance (0–1) |
-| `averageRating` | numeric | Weighted average of IMDb and TMDB consumer ratings (0–10) |
-| `runtimeMinutes` | integer | Runtime in minutes |
-| `numVotes` | integer | Combined vote count across IMDb and TMDB |
-| `streaming_platform` | character | Name of the streaming platform |
-| `release_cinema_wide` | date | Wide US theatrical release date |
-| `release_streaming` | date | Streaming platform release date |
-| `new_releases` | integer | Count of wide-release films opening in the same week (instrument) |
 
 ## Method
 
@@ -45,7 +36,7 @@ Data collection and pre-processing were conducted in Python (version 3.13.5). Al
 
 2. **Instrumental variable diagnostics** — a reduced form, two first-stage regressions, and a Durbin-Wu-Hausman test were conducted to assess the endogeneity of domestic opening gross. Both first-stage *F*-statistics fell below the weak instrument threshold, and the Hausman test indicated endogeneity was not severe; OLS (= multiple linear regression) was therefore retained as the final estimator.
 
-3. **OLS models** — a baseline model (controls and fixed effects only) and a full model (adding cinema performance, release window, and their interaction) were estimated, alongside statistical assumption testing (linearity, homoscedasticity, independence of errors, normality of residuals, multicollinearity, influential cases).
+3. **Ordinary Least Squares models** — a baseline model (controls and fixed effects only) and a full model (adding cinema performance, release window, and their interaction) were estimated, alongside statistical assumption testing (linearity, homoscedasticity, independence of errors, normality of residuals, multicollinearity, influential cases).
 
 4. **Robustness checks and exploratory analyses** — alternative operationalisations of the independent variable (domestic gross), dependent variable (60- and 90-day viewing figures), and production budget (TMDB) were tested; exploratory analyses examined platform differences and a moderated mediation.
 
@@ -94,7 +85,7 @@ install.packages("lmtest")      # bptest() for heteroscedasticity testing
 install.packages("lm.beta")     # standardised regression coefficients
 ```
 
-The moderated mediation analysis additionally relies on the **Hayes PROCESS macro**, which is not available on CRAN and must be sourced manually via `source()` prior to running the relevant script. It can be downloaded from [processmacro.org](https://www.processmacro.org/download.html).
+The moderated mediation analysis additionally relies on the **Hayes PROCESS macro**, which has to be manually loaded before PROCESS can run. It can be downloaded from [processmacro.org](https://www.processmacro.org/download.html).
 
 ## About
 
