@@ -3,7 +3,7 @@ library(tidyverse)
 library(lubridate)
 
 # Load dataset
-raw_thenumbers <- read_csv("../data/raw/raw_thenumbers.csv")
+raw_thenumbers <- read_csv("../data/raw_thenumbers.csv")
 
 # Remove timestamp variable and rank, that is metadata
 thenumbers <- raw_thenumbers %>%

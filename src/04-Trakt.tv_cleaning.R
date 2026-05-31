@@ -2,7 +2,7 @@
 library(tidyverse)
 
 # Load dataset
-raw_streaming <- read_csv("../data/raw/viewing_movies (3).csv")
+raw_streaming <- read_csv("../data/viewing_movies (3).csv")
 
 # Impression dataset
 summary(raw_streaming)

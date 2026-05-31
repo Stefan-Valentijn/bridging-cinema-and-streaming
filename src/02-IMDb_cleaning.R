@@ -2,8 +2,8 @@
 library(tidyverse)
 
 # Import datasets
-raw_title_basics <- read_csv("../data/raw/raw_title_basics.csv")
-raw_title_ratings <- read_tsv("../data/raw/raw_title.ratings.tsv")
+raw_title_basics <- read_csv("../data/raw_title_basics.csv")
+raw_title_ratings <- read_tsv("../data/raw_title.ratings.tsv")
 
 # Merge the files
 raw_imdb_total <- raw_title_basics %>%

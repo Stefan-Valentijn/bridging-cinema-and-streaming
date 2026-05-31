@@ -185,7 +185,7 @@ df <- df %>%
     log_viewing30, log_viewing_60, log_viewing_90,
     
     # streaming platform
-    streaming_platform, platform_fe, platformDisney,
+    streaming_platform, platform_fe,
     
     # box office performance (raw and log-transformed)
     domestic_opening, log_domestic_opening,
