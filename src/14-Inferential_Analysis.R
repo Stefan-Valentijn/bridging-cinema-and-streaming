@@ -212,5 +212,4 @@ process(data  = as.data.frame(df),
                   "blockbuster_score"),
         model = 14,
         boot  = 5000,
-        seed  = 123,
-        jn    = 1)
+        seed  = 123)
