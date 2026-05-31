@@ -63,7 +63,7 @@ bridging-cinema-and-streaming/
 │  ├─ 11-Final_PreProcessing.R
 │  ├─ 12-Descriptive_Analysis.R
 │  ├─ 13-Instrumental_Variable_procedure.R
-│  ├─ 14-Ordinary_Least_Squares_Regression.R
+│  ├─ 14-Inferential_Analysis.R
 │  └─ 15-HAYES process tool code.R
 └─ README.md
 ```
