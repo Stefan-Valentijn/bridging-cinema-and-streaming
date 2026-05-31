@@ -2,8 +2,7 @@
 
 ## Research Motivation
 
-The cinema-to-streaming relationship remains underexplored despite the growing academic and industry interest in how theatrical performance spills over into streaming consumption. While prior work has examined the effect of cinema performance on home entertainment sales (e.g. Hennig-Thurau et al., 2006), the role of the release window — the gap between a film's theatrical and streaming release — has received limited empirical attention in the streaming era. The present study addresses this gap by examining to what extent cinema performance predicts subsequent streaming performance, and what moderating role the release window plays.
-
+The streaming video on demand (SVOD) revolution has fundamentally changed how the success of a movie should be interpreted. Nonetheless, the relationship between cinema and streaming performance remains empirically underexplored. As release windows shrink and streaming platforms increasingly displace traditional home entertainment, understanding how cinema performance translates into streaming demand has become strategically critical for studios and distributors alike. Therefore, the present study aims to answer:
 ### Research Question
 
 *To what extent does the cinema performance of a movie predict its subsequent streaming performance, and what role does the release window play?*
